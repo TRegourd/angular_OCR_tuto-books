@@ -1,1 +1,32 @@
-<p>sign-in works!</p>
+<div class="row">
+  <div class="col-sm-8 col-sm-offset-2">
+    <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="email">Email</label
+        ><input
+          type="email"
+          id="email"
+          formControlName="email"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label
+        ><input
+          type="password"
+          id="password"
+          formControlName="password"
+          class="form-control"
+        />
+      </div>
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="signInForm.invalid"
+      >
+        Se Connecter
+      </button>
+    </form>
+    <p class="text-danger">{{ errorMessage }}</p>
+  </div>
+</div>
