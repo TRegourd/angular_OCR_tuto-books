@@ -49,7 +49,6 @@ export class BookFormComponent implements OnInit {
     const fileName = Date.now().toString() + image.name;
     const storageRef = ref(storage, 'images/' + fileName);
     const uploadTask = uploadBytesResumable(storageRef, image);
-    let returnUrl: string = '';
 
     uploadTask.on(
       'state_changed',
