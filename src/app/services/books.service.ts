@@ -9,13 +9,7 @@ import {
   onValue,
   DataSnapshot,
 } from 'firebase/database';
-import {
-  getDownloadURL,
-  getStorage,
-  ref as storage_ref,
-  uploadBytesResumable,
-  UploadTaskSnapshot,
-} from 'firebase/storage';
+import { deleteObject, getStorage, ref as storage_ref } from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
@@ -71,6 +65,17 @@ export class BooksService {
   }
 
   removeBook(bookToDelete: Book) {
+    if (bookToDelete.photo) {
+      const storage = getStorage();
+      const imageRef = storage_ref(storage, bookToDelete.photo);
+      deleteObject(imageRef)
+        .then(() => {
+          console.log('Image Removed');
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
     const bookToDeleteIndex = this.books.findIndex((book: Book) => {
       if (book === bookToDelete) {
         return true;
