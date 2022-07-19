@@ -1,5 +1,8 @@
+import { Router } from '@angular/router';
+import { Book } from './../models/book.model';
 import { BooksService } from './../services/books.service';
 import { Component, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-book-list',
@@ -7,7 +10,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./book-list.component.scss'],
 })
 export class BookListComponent implements OnInit {
-  constructor(private booksService: BooksService) {}
+  books!: Book[];
+  booksSubscription!: Subscription;
 
-  ngOnInit(): void {}
+  constructor(private booksService: BooksService, private router: Router) {}
+
+  ngOnInit(): void {
+    this.booksSubscription = this.booksService.bookSubject.subscribe(
+      (books: Book[]) => {
+        this.books = books;
+      }
+    );
+    this.booksService.getBooks();
+    this.booksService.emitBooks();
+  }
+
+  onViewBook(i: number) {
+    this.router.navigate(['/books/view/' + i]);
+  }
+  onNewBook() {
+    this.router.navigate(['/books/new']);
+  }
+  onDeleteBook(book: Book) {
+    this.booksService.removeBook(book);
+    this.booksService.emitBooks();
+  }
 }

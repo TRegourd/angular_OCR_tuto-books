@@ -14,10 +14,7 @@ import {
   providedIn: 'root',
 })
 export class BooksService {
-  private books: Book[] = [
-    { author: 'John', title: 'John' },
-    { author: 'Doe', title: 'Doe' },
-  ];
+  private books: Book[] = [];
   bookSubject = new Subject<Book[]>();
 
   constructor() {}
