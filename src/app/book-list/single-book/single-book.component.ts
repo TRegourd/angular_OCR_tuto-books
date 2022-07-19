@@ -16,7 +16,6 @@ export class SingleBookComponent implements OnInit, OnDestroy {
 
   constructor(
     private bookService: BooksService,
-    private router: Router,
     private route: ActivatedRoute,
     private location: Location
   ) {}
@@ -30,7 +29,6 @@ export class SingleBookComponent implements OnInit, OnDestroy {
       }
     );
     this.bookService.getSingleBook(Number(id));
-    this.bookService.emitSingleBook();
   }
   goBack(): void {
     this.location.back();
