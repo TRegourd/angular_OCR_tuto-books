@@ -10,7 +10,7 @@
       />
     </div>
     <div class="form-group">
-      <label for="author">Autheur</label
+      <label for="author">Auteur</label
       ><input
         type="text"
         id="author"
@@ -18,8 +18,21 @@
         class="form-control"
       />
     </div>
-
-    <button class="btn btn-primary" type="submit" [disabled]="bookForm.invalid">
+    <div class="form-group">
+      <label for="author">Image</label
+      ><input
+        type="file"
+        id="image"
+        class="form-control"
+        accept="image/*"
+        (change)="detectImage($event)"
+      />
+    </div>
+    <button
+      class="btn btn-primary"
+      type="submit"
+      [disabled]="bookForm.invalid || !fileIsUploaded"
+    >
       Ajouter
     </button>
   </form>

@@ -3,6 +3,13 @@ import { Book } from './../models/book.model';
 import { BooksService } from './../services/books.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  UploadTaskSnapshot,
+} from 'firebase/storage';
 
 @Component({
   selector: 'app-book-form',
@@ -11,6 +18,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BookFormComponent implements OnInit {
   bookForm!: FormGroup;
+  fileIsUploaded: boolean = false;
+  fileUrl!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,6 +39,40 @@ export class BookFormComponent implements OnInit {
     const newBook = new Book(formValue['title'], formValue['author']);
     this.booksService.createBook(newBook);
     this.router.navigate(['/books']);
+  }
+
+  onUploadImage(image: File) {
+    const storage = getStorage();
+    const fileName = Date.now().toString() + image.name;
+    const storageRef = ref(storage, 'images/' + fileName);
+    const uploadTask = uploadBytesResumable(storageRef, image);
+    let returnUrl: string = '';
+
+    uploadTask.on(
+      'state_changed',
+      () => {
+        console.log('uploading...');
+
+        this.fileIsUploaded = false;
+      },
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        console.log('uploaded');
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          this.fileUrl = downloadURL;
+          this.fileIsUploaded = true;
+        });
+      }
+    );
+  }
+
+  detectImage(event: Event) {
+    const eventTarget = event.target as HTMLInputElement;
+    if (eventTarget.files && eventTarget.files.length) {
+      this.onUploadImage(eventTarget.files[0]);
+    }
   }
 
   ngOnInit(): void {

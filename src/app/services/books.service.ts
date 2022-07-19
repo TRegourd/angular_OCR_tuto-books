@@ -9,6 +9,13 @@ import {
   onValue,
   DataSnapshot,
 } from 'firebase/database';
+import {
+  getDownloadURL,
+  getStorage,
+  ref as storage_ref,
+  uploadBytesResumable,
+  UploadTaskSnapshot,
+} from 'firebase/storage';
 
 @Injectable({
   providedIn: 'root',
