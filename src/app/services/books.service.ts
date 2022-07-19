@@ -15,12 +15,18 @@ import {
 })
 export class BooksService {
   private books: Book[] = [];
+  private book!: Book;
   bookSubject = new Subject<Book[]>();
+  singleBookSubject = new Subject<Book>();
 
   constructor() {}
 
   emitBooks() {
     this.bookSubject.next(this.books.slice());
+  }
+
+  emitSingleBook() {
+    this.singleBookSubject.next(this.book);
   }
 
   saveBooks() {
@@ -39,11 +45,13 @@ export class BooksService {
 
   getSingleBook(id: number) {
     const db = getDatabase();
-    const book = ref(db, '/books/' + id);
     onValue(
-      book,
+      ref(db, '/books/' + id),
       (snapshot: DataSnapshot) => {
-        return snapshot.val() ? snapshot.val() : [];
+        if (snapshot.val()) {
+          this.book = snapshot.val();
+          this.emitSingleBook();
+        }
       },
       { onlyOnce: true }
     );

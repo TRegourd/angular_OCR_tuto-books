@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Book } from './../models/book.model';
 import { BooksService } from './../services/books.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './book-list.component.html',
   styleUrls: ['./book-list.component.scss'],
 })
-export class BookListComponent implements OnInit {
+export class BookListComponent implements OnInit, OnDestroy {
   books!: Book[];
   booksSubscription!: Subscription;
 
@@ -34,5 +34,9 @@ export class BookListComponent implements OnInit {
   onDeleteBook(book: Book) {
     this.booksService.removeBook(book);
     this.booksService.emitBooks();
+  }
+
+  ngOnDestroy(): void {
+    this.booksSubscription.unsubscribe();
   }
 }
