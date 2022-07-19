@@ -8,7 +8,6 @@ import {
   getStorage,
   ref,
   uploadBytesResumable,
-  UploadTaskSnapshot,
 } from 'firebase/storage';
 
 @Component({
@@ -18,8 +17,8 @@ import {
 })
 export class BookFormComponent implements OnInit {
   bookForm!: FormGroup;
-  fileIsUploaded: boolean = false;
-  fileUrl!: string;
+  fileIsUploaded: boolean = true;
+  fileUrl: string = '';
 
   constructor(
     private formBuilder: FormBuilder,
@@ -36,7 +35,11 @@ export class BookFormComponent implements OnInit {
 
   onSubmitBookForm(): void {
     const formValue = this.bookForm.value;
-    const newBook = new Book(formValue['title'], formValue['author']);
+    const newBook = new Book(
+      formValue['title'],
+      formValue['author'],
+      this.fileUrl
+    );
     this.booksService.createBook(newBook);
     this.router.navigate(['/books']);
   }
